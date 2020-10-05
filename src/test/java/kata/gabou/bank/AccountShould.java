@@ -17,7 +17,8 @@ public class AccountShould {
     private static Stream<Arguments> amountDepositProvider() {
         return Stream.of(
                 arguments(Collections.singletonList(new Amount(0, 0)), new Amount(0,0)),
-                arguments(Arrays.asList(new Amount(1,0), new Amount(1,0)), new Amount(2,0))
+                arguments(Arrays.asList(new Amount(1,0), new Amount(1,0)), new Amount(2,0)),
+                arguments(Arrays.asList(new Amount(1,5), new Amount(1,2)), new Amount(2,7))
         );
     }
 

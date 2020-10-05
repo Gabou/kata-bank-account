@@ -12,6 +12,11 @@ public class Amount {
         this.decimalPart = decimalPart;
     }
 
+    public void add(Amount amount) {
+        integerPart += amount.integerPart;
+        decimalPart += amount.decimalPart;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -29,9 +34,5 @@ public class Amount {
     @Override
     public String toString() {
         return integerPart + "," + decimalPart ;
-    }
-
-    public void add(Amount amount) {
-        integerPart += amount.integerPart;
     }
 }

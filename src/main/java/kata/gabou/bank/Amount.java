@@ -15,6 +15,11 @@ public class Amount {
     public void add(Amount amount) {
         integerPart += amount.integerPart;
         decimalPart += amount.decimalPart;
+
+        if (decimalPart >=100) {
+            integerPart += decimalPart / 100;
+            decimalPart = decimalPart % 100;
+        }
     }
 
     @Override

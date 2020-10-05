@@ -3,8 +3,8 @@ package kata.gabou.bank;
 import java.util.Objects;
 
 public class Amount {
-    private final int integerPart;
-    private final int decimalPart;
+    private int integerPart;
+    private int decimalPart;
 
     public Amount(int integerPart, int decimalPart) {
 
@@ -29,5 +29,9 @@ public class Amount {
     @Override
     public String toString() {
         return integerPart + "," + decimalPart ;
+    }
+
+    public void add(Amount amount) {
+        integerPart += amount.integerPart;
     }
 }

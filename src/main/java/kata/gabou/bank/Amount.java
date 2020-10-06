@@ -1,6 +1,7 @@
 package kata.gabou.bank;
 
 import java.util.Objects;
+import java.util.Optional;
 
 public class Amount {
     public static final int MAX_CENTS = 100;
@@ -14,7 +15,7 @@ public class Amount {
         this.decimalPart = decimalPart;
     }
 
-    public void add(Amount amount) {
+    public Optional<Amount> add(Amount amount) {
         integerPart += amount.integerPart;
         decimalPart += amount.decimalPart;
 
@@ -22,12 +23,13 @@ public class Amount {
             integerPart += decimalPart / MAX_CENTS;
             decimalPart = decimalPart % MAX_CENTS;
         }
+        return Optional.of(this);
     }
 
-    public void substract(Amount amount) {
+    public Optional<Amount> substract(Amount amount) {
 
         if(noSavings() || amount.greaterThan(this)) {
-            return;
+            return Optional.empty();
         }
 
         integerPart -= amount.integerPart;
@@ -37,6 +39,7 @@ public class Amount {
             integerPart -= 1;
             decimalPart += MAX_CENTS;
         }
+        return Optional.of(this);
     }
 
     private boolean greaterThan(Amount amount) {

@@ -1,25 +1,30 @@
 package kata.gabou.bank;
 
+import kata.gabou.bank.history.AccountHistory;
+
+import java.util.Optional;
+
 public class Account {
-    private Amount amount;
+    private Amount balance;
     private AccountHistory history;
 
-    public Account(Amount amount, AccountHistory history) {
-        this.amount = amount;
+    public Account(Amount balance, AccountHistory history) {
+        this.balance = balance;
         this.history = history;
     }
 
     public void makeAn(Operation operation) {
+        Optional<Amount> newBalance = Optional.empty();
         if (operation.type() == OperationType.DEPOSIT) {
-            this.amount.add(operation.amount());
+            newBalance = balance.add(operation.amount());
         } else if (operation.type() == OperationType.WITHDRAWAL) {
-            this.amount.substract(operation.amount());
+            newBalance = balance.substract(operation.amount());
         }
-        history.add(operation, Amount.of(amount));
+        newBalance.ifPresent(amount -> history.add(operation, Amount.of(amount)));
     }
 
     public Amount amount() {
-        return amount;
+        return balance;
     }
 
     public AccountHistory history() {

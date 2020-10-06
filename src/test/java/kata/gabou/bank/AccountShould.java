@@ -1,5 +1,6 @@
 package kata.gabou.bank;
 
+import kata.gabou.bank.history.AccountHistory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -78,6 +79,18 @@ public class AccountShould {
         Account account = new Account(new Amount(0,0), new AccountHistory());
         account.makeAn(new Operation(DEPOSIT, new Amount(5,0), LocalDate.of(2020,4,2)));
         account.makeAn(new Operation(WITHDRAWAL, new Amount(4,0), LocalDate.of(2020,5,5)));
+        AccountHistory historyExpected = new AccountHistory();
+        historyExpected.add(new Operation(DEPOSIT, new Amount(5,0), LocalDate.of(2020,4,2)), new Amount(5,0));
+        historyExpected.add(new Operation(WITHDRAWAL, new Amount(4,0), LocalDate.of(2020,5,5)), new Amount(1,0));
+        assertThat(account.history()).isEqualTo(historyExpected);
+    }
+
+    @Test
+    void not_put_prevented_operation_in_history() {
+        Account account = new Account(new Amount(0,0), new AccountHistory());
+        account.makeAn(new Operation(DEPOSIT, new Amount(5,0), LocalDate.of(2020,4,2)));
+        account.makeAn(new Operation(WITHDRAWAL, new Amount(4,0), LocalDate.of(2020,5,5)));
+        account.makeAn(new Operation(WITHDRAWAL, new Amount(4,0), LocalDate.of(2020,7,5)));
         AccountHistory historyExpected = new AccountHistory();
         historyExpected.add(new Operation(DEPOSIT, new Amount(5,0), LocalDate.of(2020,4,2)), new Amount(5,0));
         historyExpected.add(new Operation(WITHDRAWAL, new Amount(4,0), LocalDate.of(2020,5,5)), new Amount(1,0));

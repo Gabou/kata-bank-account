@@ -1,4 +1,7 @@
-package kata.gabou.bank;
+package kata.gabou.bank.history;
+
+import kata.gabou.bank.Amount;
+import kata.gabou.bank.Operation;
 
 import java.util.Objects;
 

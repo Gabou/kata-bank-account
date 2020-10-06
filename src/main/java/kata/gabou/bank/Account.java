@@ -11,6 +11,10 @@ public class Account {
         this.amount.add(amount);
     }
 
+    public void withdraw(Amount amount) {
+        this.amount.substract(amount);
+    }
+
     public Amount amount() {
         return amount;
     }

@@ -25,11 +25,29 @@ public class AccountShould {
 
     @ParameterizedTest
     @MethodSource("amountDepositProvider")
-    void receive_a_deposit(List<Amount> depositAmount, Amount accountAmount) {
+    void receive_a_deposit(List<Amount> depositAmount, Amount newAccountAmount) {
         Account account = new Account(new Amount(0,0));
         for (Amount amount : depositAmount) {
             account.deposit(amount);
         }
-        assertThat(account.amount()).isEqualTo(accountAmount);
+        assertThat(account.amount()).isEqualTo(newAccountAmount);
+    }
+
+
+
+    private static Stream<Arguments> amountWithdrawalProvider() {
+        return Stream.of(
+                arguments(new Amount(10,0), Collections.singletonList(new Amount(1, 0)), new Amount(9,0))
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("amountWithdrawalProvider")
+    void allow_a_withdrawal(Amount accountAmount, List<Amount> withdrawalAmount, Amount newAccountAmount) {
+        Account account = new Account(accountAmount);
+        for (Amount amount : withdrawalAmount) {
+            account.withdraw(amount);
+        }
+        assertThat(account.amount()).isEqualTo(newAccountAmount);
     }
 }

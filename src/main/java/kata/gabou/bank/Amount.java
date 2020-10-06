@@ -22,6 +22,10 @@ public class Amount {
         }
     }
 
+    public void substract(Amount amount) {
+        integerPart -= amount.integerPart;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -3,6 +3,8 @@ package kata.gabou.bank;
 import java.util.Objects;
 
 public class Amount {
+    public static final int MAX_CENTS = 100;
+    public static final int MIN_CENTS = 0;
     private int integerPart;
     private int decimalPart;
 
@@ -16,15 +18,20 @@ public class Amount {
         integerPart += amount.integerPart;
         decimalPart += amount.decimalPart;
 
-        if (decimalPart >=100) {
-            integerPart += decimalPart / 100;
-            decimalPart = decimalPart % 100;
+        if (decimalPart >=MAX_CENTS) {
+            integerPart += decimalPart / MAX_CENTS;
+            decimalPart = decimalPart % MAX_CENTS;
         }
     }
 
     public void substract(Amount amount) {
         integerPart -= amount.integerPart;
         decimalPart -= amount.decimalPart;
+        
+        if (decimalPart < MIN_CENTS) {
+            integerPart -= 1;
+            decimalPart += MAX_CENTS;
+        }
     }
 
     @Override

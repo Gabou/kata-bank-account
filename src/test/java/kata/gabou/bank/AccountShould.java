@@ -38,7 +38,8 @@ public class AccountShould {
     private static Stream<Arguments> amountWithdrawalProvider() {
         return Stream.of(
                 arguments(new Amount(10,0), Collections.singletonList(new Amount(1, 0)), new Amount(9,0)),
-                arguments(new Amount(10,50), Collections.singletonList(new Amount(0, 25)), new Amount(10,25))
+                arguments(new Amount(10,50), Collections.singletonList(new Amount(0, 25)), new Amount(10,25)),
+                arguments(new Amount(10,50), Collections.singletonList(new Amount(0, 80)), new Amount(9,70))
         );
     }
 

@@ -25,6 +25,11 @@ public class Amount {
     }
 
     public void substract(Amount amount) {
+
+        if(noSavings() || amount.greaterThan(this)) {
+            return;
+        }
+
         integerPart -= amount.integerPart;
         decimalPart -= amount.decimalPart;
         
@@ -32,6 +37,14 @@ public class Amount {
             integerPart -= 1;
             decimalPart += MAX_CENTS;
         }
+    }
+
+    private boolean greaterThan(Amount amount) {
+        return this.integerPart > amount.integerPart || (this.integerPart == amount.integerPart && this.decimalPart > amount.decimalPart);
+    }
+
+    private boolean noSavings() {
+        return integerPart == 0 && decimalPart == 0;
     }
 
     @Override

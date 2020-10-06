@@ -2,9 +2,11 @@ package kata.gabou.bank;
 
 public class Account {
     private Amount amount;
+    private AccountHistory history;
 
-    public Account(Amount amount) {
+    public Account(Amount amount, AccountHistory history) {
         this.amount = amount;
+        this.history = history;
     }
 
     public void makeAn(Operation operation) {
@@ -13,9 +15,14 @@ public class Account {
         } else if (operation.type() == OperationType.WITHDRAWAL) {
             this.amount.substract(operation.amount());
         }
+        history.add(operation, Amount.of(amount));
     }
 
     public Amount amount() {
         return amount;
+    }
+
+    public AccountHistory history() {
+        return history;
     }
 }

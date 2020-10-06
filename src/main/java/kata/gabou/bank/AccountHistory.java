@@ -6,14 +6,10 @@ import java.util.Objects;
 
 public class AccountHistory {
 
-    private List<Operation> operations = new ArrayList<>();
+    private List<OperationHistory> operations = new ArrayList<>();
 
-    public void add(Operation operation) {
-        operations.add(operation);
-    }
-
-    public List<Operation> list() {
-        return operations;
+    public void add(Operation operation, final Amount balance) {
+        operations.add(new OperationHistory(operation, balance));
     }
 
     @Override
@@ -27,5 +23,12 @@ public class AccountHistory {
     @Override
     public int hashCode() {
         return Objects.hash(operations);
+    }
+
+    @Override
+    public String toString() {
+        return "AccountHistory{" +
+                "operations=" + operations +
+                '}';
     }
 }

@@ -32,7 +32,7 @@ public class Amount {
 
         integerPart -= amount.integerPart;
         decimalPart -= amount.decimalPart;
-        
+
         if (decimalPart < MIN_CENTS) {
             integerPart -= 1;
             decimalPart += MAX_CENTS;
@@ -45,6 +45,10 @@ public class Amount {
 
     private boolean noSavings() {
         return integerPart == 0 && decimalPart == 0;
+    }
+
+    public static Amount of(Amount amount) {
+        return new Amount(amount.integerPart, amount.decimalPart);
     }
 
     @Override

@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +30,7 @@ public class AccountShould {
     @ParameterizedTest
     @MethodSource("amountDepositProvider")
     void receive_a_deposit(List<Amount> depositAmount, Amount newAccountAmount) {
-        Account account = new Account(new Amount(0,0));
+        Account account = new Account(new Amount(0,0), new AccountHistory());
         for (Amount amount : depositAmount) {
             account.makeAn(new Operation(DEPOSIT,amount));
         }
@@ -48,7 +49,7 @@ public class AccountShould {
     @ParameterizedTest
     @MethodSource("amountWithdrawalProvider")
     void allow_a_withdrawal(Amount accountAmount, List<Amount> withdrawalAmount, Amount newAccountAmount) {
-        Account account = new Account(accountAmount);
+        Account account = new Account(accountAmount, new AccountHistory());
         for (Amount amount : withdrawalAmount) {
             account.makeAn(new Operation(WITHDRAWAL,amount));
         }
@@ -65,10 +66,21 @@ public class AccountShould {
     @ParameterizedTest
     @MethodSource("notAllowedAmountWithdrawalProvider")
     void prevent_a_withdrawal_when_there_is_not_enough_savings(Amount accountAmount, List<Amount> withdrawalAmount, Amount newAccountAmount) {
-        Account account = new Account(accountAmount);
+        Account account = new Account(accountAmount, new AccountHistory());
         for (Amount amount : withdrawalAmount) {
             account.makeAn(new Operation(WITHDRAWAL,amount));
         }
         assertThat(account.amount()).isEqualTo(newAccountAmount);
+    }
+
+    @Test
+    void give_account_history_operations() {
+        Account account = new Account(new Amount(0,0), new AccountHistory());
+        account.makeAn(new Operation(DEPOSIT, new Amount(5,0), LocalDate.of(2020,4,2)));
+        account.makeAn(new Operation(WITHDRAWAL, new Amount(4,0), LocalDate.of(2020,5,5)));
+        AccountHistory historyExpected = new AccountHistory();
+        historyExpected.add(new Operation(DEPOSIT, new Amount(5,0), LocalDate.of(2020,4,2)), new Amount(5,0));
+        historyExpected.add(new Operation(WITHDRAWAL, new Amount(4,0), LocalDate.of(2020,5,5)), new Amount(1,0));
+        assertThat(account.history()).isEqualTo(historyExpected);
     }
 }

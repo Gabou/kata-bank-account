@@ -7,12 +7,12 @@ public class Account {
         this.amount = amount;
     }
 
-    public void deposit(Amount amount) {
-        this.amount.add(amount);
-    }
-
-    public void withdraw(Amount amount) {
-        this.amount.substract(amount);
+    public void makeAn(Operation operation) {
+        if (operation.type() == OperationType.DEPOSIT) {
+            this.amount.add(operation.amount());
+        } else if (operation.type() == OperationType.WITHDRAWAL) {
+            this.amount.substract(operation.amount());
+        }
     }
 
     public Amount amount() {

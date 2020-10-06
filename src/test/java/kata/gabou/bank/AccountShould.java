@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static kata.gabou.bank.OperationType.DEPOSIT;
+import static kata.gabou.bank.OperationType.WITHDRAWAL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
@@ -28,12 +30,10 @@ public class AccountShould {
     void receive_a_deposit(List<Amount> depositAmount, Amount newAccountAmount) {
         Account account = new Account(new Amount(0,0));
         for (Amount amount : depositAmount) {
-            account.deposit(amount);
+            account.makeAn(new Operation(DEPOSIT,amount));
         }
         assertThat(account.amount()).isEqualTo(newAccountAmount);
     }
-
-
 
     private static Stream<Arguments> amountWithdrawalProvider() {
         return Stream.of(
@@ -48,7 +48,7 @@ public class AccountShould {
     void allow_a_withdrawal(Amount accountAmount, List<Amount> withdrawalAmount, Amount newAccountAmount) {
         Account account = new Account(accountAmount);
         for (Amount amount : withdrawalAmount) {
-            account.withdraw(amount);
+            account.makeAn(new Operation(WITHDRAWAL,amount));
         }
         assertThat(account.amount()).isEqualTo(newAccountAmount);
     }

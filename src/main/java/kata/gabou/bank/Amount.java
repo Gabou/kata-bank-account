@@ -24,6 +24,7 @@ public class Amount {
 
     public void substract(Amount amount) {
         integerPart -= amount.integerPart;
+        decimalPart -= amount.decimalPart;
     }
 
     @Override

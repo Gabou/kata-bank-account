@@ -15,12 +15,15 @@ public class Account {
 
     public void makeAn(Operation operation) {
         Optional<Amount> newBalance = Optional.empty();
-        if (operation.type() == OperationType.DEPOSIT) {
+        if (operation.type().equals(OperationType.DEPOSIT)) {
             newBalance = balance.add(operation.amount());
-        } else if (operation.type() == OperationType.WITHDRAWAL) {
+        } else if (operation.type().equals(OperationType.WITHDRAWAL)) {
             newBalance = balance.substract(operation.amount());
         }
-        newBalance.ifPresent(amount -> history.add(operation, Amount.of(amount)));
+        newBalance.ifPresent(amount -> {
+            history.add(operation, amount);
+            this.balance = amount;
+        });
     }
 
     public Amount amount() {

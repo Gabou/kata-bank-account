@@ -6,8 +6,8 @@ import java.util.Optional;
 public class Amount {
     public static final int MAX_CENTS = 100;
     public static final int MIN_CENTS = 0;
-    private int integerPart;
-    private int decimalPart;
+    private final int integerPart;
+    private final int decimalPart;
 
     public Amount(int integerPart, int decimalPart) {
 
@@ -16,14 +16,14 @@ public class Amount {
     }
 
     public Optional<Amount> add(Amount amount) {
-        integerPart += amount.integerPart;
-        decimalPart += amount.decimalPart;
+        int newIntegerPart = this.integerPart + amount.integerPart;
+        int newDecimalPart = this.decimalPart + amount.decimalPart;
 
-        if (decimalPart >=MAX_CENTS) {
-            integerPart += decimalPart / MAX_CENTS;
-            decimalPart = decimalPart % MAX_CENTS;
+        if (newDecimalPart >=MAX_CENTS) {
+            newIntegerPart += newDecimalPart / MAX_CENTS;
+            newDecimalPart = newDecimalPart % MAX_CENTS;
         }
-        return Optional.of(this);
+        return Optional.of(new Amount(newIntegerPart, newDecimalPart));
     }
 
     public Optional<Amount> substract(Amount amount) {
@@ -32,14 +32,14 @@ public class Amount {
             return Optional.empty();
         }
 
-        integerPart -= amount.integerPart;
-        decimalPart -= amount.decimalPart;
+        int newIntegerPart = integerPart - amount.integerPart;
+        int newDecimalPart = decimalPart - amount.decimalPart;
 
-        if (decimalPart < MIN_CENTS) {
-            integerPart -= 1;
-            decimalPart += MAX_CENTS;
+        if (newDecimalPart < MIN_CENTS) {
+            newIntegerPart -= 1;
+            newDecimalPart += MAX_CENTS;
         }
-        return Optional.of(this);
+        return Optional.of(new Amount(newIntegerPart, newDecimalPart));
     }
 
     private boolean greaterThan(Amount amount) {
@@ -48,10 +48,6 @@ public class Amount {
 
     private boolean noSavings() {
         return integerPart == 0 && decimalPart == 0;
-    }
-
-    public static Amount of(Amount amount) {
-        return new Amount(amount.integerPart, amount.decimalPart);
     }
 
     @Override

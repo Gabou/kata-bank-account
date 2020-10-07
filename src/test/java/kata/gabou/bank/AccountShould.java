@@ -40,37 +40,33 @@ public class AccountShould {
 
     private static Stream<Arguments> amountWithdrawalProvider() {
         return Stream.of(
-                arguments(new Amount(10,0), Collections.singletonList(new Amount(1, 0)), new Amount(9,0)),
-                arguments(new Amount(10,50), Collections.singletonList(new Amount(0, 25)), new Amount(10,25)),
-                arguments(new Amount(10,50), Collections.singletonList(new Amount(0, 80)), new Amount(9,70)),
-                arguments(new Amount(10,0), Collections.singletonList(new Amount(10, 0)), new Amount(0,0))
+                arguments(new Amount(10,0), new Amount(1, 0), new Amount(9,0)),
+                arguments(new Amount(10,50), new Amount(0, 25), new Amount(10,25)),
+                arguments(new Amount(10,50), new Amount(0, 80), new Amount(9,70)),
+                arguments(new Amount(10,0), new Amount(10, 0), new Amount(0,0))
         );
     }
 
     @ParameterizedTest
     @MethodSource("amountWithdrawalProvider")
-    void allow_a_withdrawal(Amount accountAmount, List<Amount> withdrawalAmount, Amount newAccountAmount) {
+    void allow_a_withdrawal(Amount accountAmount, Amount withdrawalAmount, Amount newAccountAmount) {
         Account account = new Account(accountAmount, new AccountHistory());
-        for (Amount amount : withdrawalAmount) {
-            account.makeAn(new Operation(WITHDRAWAL,amount));
-        }
+        account.makeAn(new Operation(WITHDRAWAL,withdrawalAmount));
         assertThat(account.amount()).isEqualTo(newAccountAmount);
     }
 
     private static Stream<Arguments> notAllowedAmountWithdrawalProvider() {
         return Stream.of(
-                arguments(new Amount(0,0), Collections.singletonList(new Amount(1, 0)), new Amount(0,0)),
-                arguments(new Amount(0,50), Collections.singletonList(new Amount(1, 0)), new Amount(0,50))
+                arguments(new Amount(0,0), new Amount(1, 0), new Amount(0,0)),
+                arguments(new Amount(0,50), new Amount(1, 0), new Amount(0,50))
         );
     }
 
     @ParameterizedTest
     @MethodSource("notAllowedAmountWithdrawalProvider")
-    void prevent_a_withdrawal_when_there_is_not_enough_savings(Amount accountAmount, List<Amount> withdrawalAmount, Amount newAccountAmount) {
+    void prevent_a_withdrawal_when_there_is_not_enough_savings(Amount accountAmount, Amount withdrawalAmount, Amount newAccountAmount) {
         Account account = new Account(accountAmount, new AccountHistory());
-        for (Amount amount : withdrawalAmount) {
-            account.makeAn(new Operation(WITHDRAWAL,amount));
-        }
+        account.makeAn(new Operation(WITHDRAWAL,withdrawalAmount));
         assertThat(account.amount()).isEqualTo(newAccountAmount);
     }
 

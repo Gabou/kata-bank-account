@@ -9,10 +9,14 @@ import java.util.Objects;
 
 public class AccountHistory {
 
-    private List<OperationHistory> operations = new ArrayList<>();
+    private final List<OperationHistory> operations = new ArrayList<>();
 
     public void add(Operation operation, final Amount balance) {
         operations.add(new OperationHistory(operation, balance));
+    }
+
+    public List<OperationHistory> operations(){
+        return operations;
     }
 
     @Override

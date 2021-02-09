@@ -14,16 +14,20 @@ public class Account {
     }
 
     public void makeAn(Operation operation) {
-        Optional<Amount> newBalance = Optional.empty();
+        Amount newBalance = null;
+        Amount operationAmount = operation.amount();
         if (operation.type().equals(OperationType.DEPOSIT)) {
-            newBalance = balance.add(operation.amount());
+            newBalance = balance.add(operationAmount);
         } else if (operation.type().equals(OperationType.WITHDRAWAL)) {
-            newBalance = balance.subtract(operation.amount());
+            if(!balance.noSavings() && balance.greaterOrEqualThan(operationAmount)) {
+                newBalance = balance.subtract(operationAmount);
+            }
         }
-        newBalance.ifPresent(amount -> {
-            history.add(operation, amount);
-            this.balance = amount;
-        });
+
+        if (newBalance != null){
+            history.add(operation, newBalance);
+            this.balance = newBalance;
+        }
     }
 
     public Amount amount() {

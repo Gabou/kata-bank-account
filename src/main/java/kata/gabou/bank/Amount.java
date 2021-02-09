@@ -11,25 +11,21 @@ public class Amount {
         this.value = value;
     }
 
-    public Optional<Amount> add(Amount amount) {
+    public Amount add(Amount amount) {
         BigDecimal newValue = value.add(amount.value);
-        return Optional.of(new Amount(newValue));
+        return new Amount(newValue);
     }
 
-    public Optional<Amount> subtract(Amount amount) {
-
-        if(noSavings() || amount.greaterThan(this)) {
-            return Optional.empty();
-        }
+    public Amount subtract(Amount amount) {
         BigDecimal newValue = value.subtract(amount.value);
-        return Optional.of(new Amount(newValue));
+        return new Amount(newValue);
     }
 
-    private boolean greaterThan(Amount amount) {
-        return this.value.compareTo(amount.value) > 0;
+    public boolean greaterOrEqualThan(Amount amount) {
+        return this.value.compareTo(amount.value) >= 0;
     }
 
-    private boolean noSavings() {
+    public boolean noSavings() {
         return value.compareTo(BigDecimal.ZERO) == 0;
     }
 

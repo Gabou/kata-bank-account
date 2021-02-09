@@ -6,6 +6,7 @@ import kata.gabou.bank.OperationType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -15,9 +16,9 @@ public class AccountHistoryShould {
     @Test
     void save_operation() {
         AccountHistory accountHistory = new AccountHistory();
-        Amount operationAmount = new Amount(5, 60);
+        Amount operationAmount = new Amount(BigDecimal.valueOf(5.60));
         LocalDate operationDate = LocalDate.of(2020, 5, 4);
-        Amount balance = new Amount(10, 0);
+        Amount balance = new Amount(BigDecimal.valueOf(10.0));
         accountHistory.add(new Operation(OperationType.DEPOSIT, operationAmount, operationDate), balance);
         accountHistory.add(new Operation(OperationType.WITHDRAWAL, operationAmount, operationDate), balance);
 

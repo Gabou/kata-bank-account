@@ -18,7 +18,7 @@ public class Account {
         if (operation.type().equals(OperationType.DEPOSIT)) {
             newBalance = balance.add(operation.amount());
         } else if (operation.type().equals(OperationType.WITHDRAWAL)) {
-            newBalance = balance.substract(operation.amount());
+            newBalance = balance.subtract(operation.amount());
         }
         newBalance.ifPresent(amount -> {
             history.add(operation, amount);

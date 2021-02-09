@@ -6,8 +6,8 @@ import java.util.Optional;
 public class Amount {
     public static final int MAX_CENTS = 100;
     public static final int MIN_CENTS = 0;
-    private final int integerPart;
-    private final int decimalPart;
+    private int integerPart;
+    private int decimalPart;
 
     public Amount(int integerPart, int decimalPart) {
 
@@ -26,7 +26,7 @@ public class Amount {
         return Optional.of(new Amount(newIntegerPart, newDecimalPart));
     }
 
-    public Optional<Amount> substract(Amount amount) {
+    public Optional<Amount> subtract(Amount amount) {
 
         if(noSavings() || amount.greaterThan(this)) {
             return Optional.empty();

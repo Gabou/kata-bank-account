@@ -1,8 +1,7 @@
 package kata.gabou.bank;
 
 import kata.gabou.bank.history.AccountHistory;
-
-import java.util.Optional;
+import kata.gabou.bank.operations.Operation;
 
 public class Account {
     private Amount balance;
@@ -14,19 +13,12 @@ public class Account {
     }
 
     public void makeAn(Operation operation) {
-        Amount newBalance = null;
-        Amount operationAmount = operation.amount();
-        if (operation.type().equals(OperationType.DEPOSIT)) {
-            newBalance = balance.add(operationAmount);
-        } else if (operation.type().equals(OperationType.WITHDRAWAL)) {
-            if(!balance.noSavings() && balance.greaterOrEqualThan(operationAmount)) {
-                newBalance = balance.subtract(operationAmount);
-            }
-        }
-
-        if (newBalance != null){
+        try {
+            Amount newBalance = operation.execute(balance);
             history.add(operation, newBalance);
             this.balance = newBalance;
+        } catch (NotEnoughSavingsException exception) {
+            System.err.println(exception.getMessage());
         }
     }
 

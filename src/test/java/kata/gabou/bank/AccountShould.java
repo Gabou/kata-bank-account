@@ -1,6 +1,8 @@
 package kata.gabou.bank;
 
 import kata.gabou.bank.history.AccountHistory;
+import kata.gabou.bank.operations.Deposit;
+import kata.gabou.bank.operations.Withdrawal;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -13,8 +15,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static kata.gabou.bank.OperationType.DEPOSIT;
-import static kata.gabou.bank.OperationType.WITHDRAWAL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
@@ -34,7 +34,7 @@ public class AccountShould {
     void receive_a_deposit(List<Amount> depositAmount, Amount newAccountAmount) {
         Account account = new Account(new Amount(BigDecimal.valueOf(0.0)), new AccountHistory());
         for (Amount amount : depositAmount) {
-            account.makeAn(new Operation(DEPOSIT,amount));
+            account.makeAn(new Deposit(amount));
         }
         assertThat(account.amount()).isEqualTo(newAccountAmount);
     }
@@ -52,7 +52,7 @@ public class AccountShould {
     @MethodSource("amountWithdrawalProvider")
     void allow_a_withdrawal(Amount accountAmount, Amount withdrawalAmount, Amount newAccountAmount) {
         Account account = new Account(accountAmount, new AccountHistory());
-        account.makeAn(new Operation(WITHDRAWAL,withdrawalAmount));
+        account.makeAn(new Withdrawal(withdrawalAmount));
         assertThat(account.amount()).isEqualTo(newAccountAmount);
     }
 
@@ -67,30 +67,30 @@ public class AccountShould {
     @MethodSource("notAllowedAmountWithdrawalProvider")
     void prevent_a_withdrawal_when_there_is_not_enough_savings(Amount accountAmount, Amount withdrawalAmount, Amount newAccountAmount) {
         Account account = new Account(accountAmount, new AccountHistory());
-        account.makeAn(new Operation(WITHDRAWAL,withdrawalAmount));
+        account.makeAn(new Withdrawal(withdrawalAmount));
         assertThat(account.amount()).isEqualTo(newAccountAmount);
     }
 
     @Test
     void give_account_history_operations() {
         Account account = new Account(new Amount(BigDecimal.valueOf(0.0)), new AccountHistory());
-        account.makeAn(new Operation(DEPOSIT, new Amount(BigDecimal.valueOf(5.0)), LocalDate.of(2020,4,2)));
-        account.makeAn(new Operation(WITHDRAWAL, new Amount(BigDecimal.valueOf(4.0)), LocalDate.of(2020,5,5)));
+        account.makeAn(new Deposit(new Amount(BigDecimal.valueOf(5.0)), LocalDate.of(2020,4,2)));
+        account.makeAn(new Withdrawal(new Amount(BigDecimal.valueOf(4.0)), LocalDate.of(2020,5,5)));
         AccountHistory historyExpected = new AccountHistory();
-        historyExpected.add(new Operation(DEPOSIT, new Amount(BigDecimal.valueOf(5.0)), LocalDate.of(2020,4,2)), new Amount(BigDecimal.valueOf(5.0)));
-        historyExpected.add(new Operation(WITHDRAWAL, new Amount(BigDecimal.valueOf(4.0)), LocalDate.of(2020,5,5)), new Amount(BigDecimal.valueOf(1.0)));
+        historyExpected.add(new Deposit(new Amount(BigDecimal.valueOf(5.0)), LocalDate.of(2020,4,2)), new Amount(BigDecimal.valueOf(5.0)));
+        historyExpected.add(new Withdrawal(new Amount(BigDecimal.valueOf(4.0)), LocalDate.of(2020,5,5)), new Amount(BigDecimal.valueOf(1.0)));
         assertThat(account.history()).isEqualTo(historyExpected);
     }
 
     @Test
     void not_put_prevented_operation_in_history() {
         Account account = new Account(new Amount(BigDecimal.valueOf(0.0)), new AccountHistory());
-        account.makeAn(new Operation(DEPOSIT, new Amount(BigDecimal.valueOf(5.0)), LocalDate.of(2020,4,2)));
-        account.makeAn(new Operation(WITHDRAWAL, new Amount(BigDecimal.valueOf(4.0)), LocalDate.of(2020,5,5)));
-        account.makeAn(new Operation(WITHDRAWAL, new Amount(BigDecimal.valueOf(4.0)), LocalDate.of(2020,7,5)));
+        account.makeAn(new Deposit(new Amount(BigDecimal.valueOf(5.0)), LocalDate.of(2020,4,2)));
+        account.makeAn(new Withdrawal(new Amount(BigDecimal.valueOf(4.0)), LocalDate.of(2020,5,5)));
+        account.makeAn(new Withdrawal(new Amount(BigDecimal.valueOf(4.0)), LocalDate.of(2020,7,5)));
         AccountHistory historyExpected = new AccountHistory();
-        historyExpected.add(new Operation(DEPOSIT, new Amount(BigDecimal.valueOf(5.0)), LocalDate.of(2020,4,2)), new Amount(BigDecimal.valueOf(5.0)));
-        historyExpected.add(new Operation(WITHDRAWAL, new Amount(BigDecimal.valueOf(4.0)), LocalDate.of(2020,5,5)), new Amount(BigDecimal.valueOf(1.0)));
+        historyExpected.add(new Deposit(new Amount(BigDecimal.valueOf(5.0)), LocalDate.of(2020,4,2)), new Amount(BigDecimal.valueOf(5.0)));
+        historyExpected.add(new Withdrawal(new Amount(BigDecimal.valueOf(4.0)), LocalDate.of(2020,5,5)), new Amount(BigDecimal.valueOf(1.0)));
         assertThat(account.history()).isEqualTo(historyExpected);
     }
 }

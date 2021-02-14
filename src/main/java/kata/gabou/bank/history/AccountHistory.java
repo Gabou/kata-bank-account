@@ -1,5 +1,6 @@
 package kata.gabou.bank.history;
 
+import kata.gabou.bank.NotEnoughSavingsException;
 import kata.gabou.bank.operations.Operation;
 
 import java.math.BigDecimal;
@@ -9,13 +10,23 @@ import java.util.Objects;
 
 public class AccountHistory {
 
-    private final List<OperationHistory> operations = new ArrayList<>();
+    private final List<Operation> operations = new ArrayList<>();
 
-    public void add(Operation operation, final BigDecimal balance) {
-        operations.add(new OperationHistory(operation, balance));
+    public void add(Operation operation) throws NotEnoughSavingsException {
+
+        BigDecimal balance = balance();
+        if(!operation.canProcessWith(balance)) {
+            throw new NotEnoughSavingsException("Not enough Savings to process operation");
+        }
+
+        operations.add(operation);
     }
 
-    public List<OperationHistory> operations(){
+    public BigDecimal balance() {
+        return operations.stream().reduce(BigDecimal.ZERO, (amount, operation) -> operation.process(amount), (amount, amount2) -> amount);
+    }
+
+    public List<Operation> operations(){
         return operations;
     }
 

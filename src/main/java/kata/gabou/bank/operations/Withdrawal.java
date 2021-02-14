@@ -1,7 +1,5 @@
 package kata.gabou.bank.operations;
 
-import kata.gabou.bank.NotEnoughSavingsException;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -21,7 +19,7 @@ public class Withdrawal implements Operation {
     }
 
     @Override
-    public BigDecimal process(BigDecimal amount) throws NotEnoughSavingsException {
+    public BigDecimal process(BigDecimal amount) {
             return amount.subtract(this.amount);
     }
 

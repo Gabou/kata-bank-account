@@ -32,10 +32,15 @@ public class AccountShould {
     @ParameterizedTest
     @MethodSource("amountDepositProvider")
     void receive_a_deposit(List<BigDecimal> depositAmount, BigDecimal newAccountAmount) {
-        Account account = new Account(new BigDecimal("0.0"), new AccountHistory());
+        //Given
+        Account account = new Account(new AccountHistory());
+
+        //When
         for (BigDecimal amount : depositAmount) {
             account.makeAn(new Deposit(amount));
         }
+
+        //Then
         assertThat(account.amount()).isEqualTo(newAccountAmount);
     }
 
@@ -51,8 +56,14 @@ public class AccountShould {
     @ParameterizedTest
     @MethodSource("amountWithdrawalProvider")
     void allow_a_withdrawal(BigDecimal accountAmount, BigDecimal withdrawalAmount, BigDecimal newAccountAmount) {
-        Account account = new Account(accountAmount, new AccountHistory());
+        //Given
+        Account account = new Account(new AccountHistory());
+        account.makeAn(new Deposit(accountAmount));
+
+        //When
         account.makeAn(new Withdrawal(withdrawalAmount));
+
+        //Then
         assertThat(account.amount()).isEqualTo(newAccountAmount);
     }
 
@@ -66,31 +77,49 @@ public class AccountShould {
     @ParameterizedTest
     @MethodSource("notAllowedAmountWithdrawalProvider")
     void prevent_a_withdrawal_when_there_is_not_enough_savings(BigDecimal accountAmount, BigDecimal withdrawalAmount, BigDecimal newAccountAmount) {
-        Account account = new Account(accountAmount, new AccountHistory());
+        //Given
+        Account account = new Account(new AccountHistory());
+        account.makeAn(new Deposit(accountAmount));
+
+        //When
         account.makeAn(new Withdrawal(withdrawalAmount));
+
+        //Then
         assertThat(account.amount()).isEqualTo(newAccountAmount);
     }
 
     @Test
-    void give_account_history_operations() {
-        Account account = new Account(new BigDecimal("0.0"), new AccountHistory());
+    void give_account_history_operations() throws NotEnoughSavingsException {
+        //Given
+        Account account = new Account(new AccountHistory());
+
+        AccountHistory historyExpected = new AccountHistory();
+        historyExpected.add(new Deposit(new BigDecimal("5.0"), LocalDate.of(2020,4,2)));
+        historyExpected.add(new Withdrawal(new BigDecimal("4.0"), LocalDate.of(2020,5,5)));
+
+        //When
         account.makeAn(new Deposit(new BigDecimal("5.0"), LocalDate.of(2020,4,2)));
         account.makeAn(new Withdrawal(new BigDecimal("4.0"), LocalDate.of(2020,5,5)));
-        AccountHistory historyExpected = new AccountHistory();
-        historyExpected.add(new Deposit(new BigDecimal("5.0"), LocalDate.of(2020,4,2)), new BigDecimal("5.0"));
-        historyExpected.add(new Withdrawal(new BigDecimal("4.0"), LocalDate.of(2020,5,5)), new BigDecimal("1.0"));
+
+        //Then
         assertThat(account.history()).isEqualTo(historyExpected);
     }
 
     @Test
-    void not_put_prevented_operation_in_history() {
-        Account account = new Account(new BigDecimal("0.0"), new AccountHistory());
+    void not_put_prevented_operation_in_history() throws NotEnoughSavingsException {
+        //Given
+        Account account = new Account(new AccountHistory());
+
+        AccountHistory historyExpected = new AccountHistory();
+        historyExpected.add(new Deposit(new BigDecimal("5.0"), LocalDate.of(2020,4,2)));
+        historyExpected.add(new Withdrawal(new BigDecimal("4.0"), LocalDate.of(2020,5,5)));
+
+        //When
         account.makeAn(new Deposit(new BigDecimal("5.0"), LocalDate.of(2020,4,2)));
         account.makeAn(new Withdrawal(new BigDecimal("4.0"), LocalDate.of(2020,5,5)));
         account.makeAn(new Withdrawal(new BigDecimal("4.0"), LocalDate.of(2020,7,5)));
-        AccountHistory historyExpected = new AccountHistory();
-        historyExpected.add(new Deposit(new BigDecimal("5.0"), LocalDate.of(2020,4,2)), new BigDecimal("5.0"));
-        historyExpected.add(new Withdrawal(new BigDecimal("4.0"), LocalDate.of(2020,5,5)), new BigDecimal("1.0"));
+
+        //Then
         assertThat(account.history()).isEqualTo(historyExpected);
     }
 }

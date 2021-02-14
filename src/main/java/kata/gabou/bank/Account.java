@@ -6,31 +6,22 @@ import kata.gabou.bank.operations.Operation;
 import java.math.BigDecimal;
 
 public class Account {
-    private BigDecimal balance;
-    private AccountHistory history;
+    private final AccountHistory history;
 
-    public Account(BigDecimal balance, AccountHistory history) {
-        this.balance = balance;
+    public Account(AccountHistory history) {
         this.history = history;
     }
 
     public void makeAn(Operation operation) {
         try {
-
-            if(!operation.canProcessWith(balance)) {
-                throw new NotEnoughSavingsException("Not enough Savings to process operation");
-            }
-
-            BigDecimal newBalance = operation.process(balance);
-            history.add(operation, newBalance);
-            this.balance = newBalance;
+            history.add(operation);
         } catch (NotEnoughSavingsException exception) {
             System.err.println(exception.getMessage());
         }
     }
 
     public BigDecimal amount() {
-        return balance;
+        return history.balance();
     }
 
     public AccountHistory history() {

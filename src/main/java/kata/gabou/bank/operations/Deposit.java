@@ -1,26 +1,25 @@
 package kata.gabou.bank.operations;
 
-import kata.gabou.bank.Amount;
-
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
 public class Deposit implements Operation {
 
-    private final Amount amount;
+    private final BigDecimal amount;
     private final LocalDate date;
 
-    public Deposit(Amount amount, LocalDate date) {
+    public Deposit(BigDecimal amount, LocalDate date) {
         this.amount = amount;
         this.date = date;
     }
 
-    public Deposit(Amount amount) {
+    public Deposit(BigDecimal amount) {
         this(amount, LocalDate.now());
     }
 
     @Override
-    public Amount execute(Amount amount) {
+    public BigDecimal execute(BigDecimal amount) {
             return amount.add(this.amount);
     }
 

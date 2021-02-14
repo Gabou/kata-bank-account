@@ -1,15 +1,16 @@
 package kata.gabou.bank.history;
 
-import kata.gabou.bank.Amount;
+
 import kata.gabou.bank.operations.Operation;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class OperationHistory {
     private final Operation operation;
-    private final Amount balance;
+    private final BigDecimal balance;
 
-    public OperationHistory(Operation operation, Amount balance) {
+    public OperationHistory(Operation operation, BigDecimal balance) {
         this.operation = operation;
         this.balance = balance;
     }

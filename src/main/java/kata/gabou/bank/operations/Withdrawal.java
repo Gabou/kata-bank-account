@@ -1,28 +1,28 @@
 package kata.gabou.bank.operations;
 
-import kata.gabou.bank.Amount;
 import kata.gabou.bank.NotEnoughSavingsException;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
 public class Withdrawal implements Operation {
 
-    private final Amount amount;
+    private final BigDecimal amount;
     private final LocalDate date;
 
-    public Withdrawal(Amount amount, LocalDate date) {
+    public Withdrawal(BigDecimal amount, LocalDate date) {
         this.amount = amount;
         this.date = date;
     }
 
-    public Withdrawal(Amount amount) {
+    public Withdrawal(BigDecimal amount) {
         this(amount, LocalDate.now());
     }
 
     @Override
-    public Amount execute(Amount amount) throws NotEnoughSavingsException {
-        if(!amount.noSavings() && amount.greaterOrEqualThan(this.amount)) {
+    public BigDecimal execute(BigDecimal amount) throws NotEnoughSavingsException {
+        if(amount.compareTo(BigDecimal.ZERO) != 0 && amount.compareTo(this.amount) >= 0) {
             return amount.subtract(this.amount);
         }
         throw new NotEnoughSavingsException("Not possible to subtract amount because there is no savings or amount to subtract : (" + this.amount + ") is greater than original amount (" + amount + ")");

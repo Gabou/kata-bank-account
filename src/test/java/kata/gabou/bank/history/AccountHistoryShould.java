@@ -1,6 +1,5 @@
 package kata.gabou.bank.history;
 
-import kata.gabou.bank.Amount;
 import kata.gabou.bank.operations.Deposit;
 import kata.gabou.bank.operations.Withdrawal;
 import org.assertj.core.api.Assertions;
@@ -16,9 +15,9 @@ public class AccountHistoryShould {
     @Test
     void save_operation() {
         AccountHistory accountHistory = new AccountHistory();
-        Amount operationAmount = new Amount(BigDecimal.valueOf(5.60));
+        BigDecimal operationAmount = new BigDecimal("5.60");
         LocalDate operationDate = LocalDate.of(2020, 5, 4);
-        Amount balance = new Amount(BigDecimal.valueOf(10.0));
+        BigDecimal balance = new BigDecimal("10.0");
         accountHistory.add(new Deposit(operationAmount, operationDate), balance);
         accountHistory.add(new Withdrawal(operationAmount, operationDate), balance);
 

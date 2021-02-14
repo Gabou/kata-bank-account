@@ -22,18 +22,18 @@ public class AccountShould {
 
     private static Stream<Arguments> amountDepositProvider() {
         return Stream.of(
-                arguments(Collections.singletonList(new Amount(BigDecimal.valueOf(0.0))), new Amount(BigDecimal.valueOf(0.0))),
-                arguments(Arrays.asList(new Amount(BigDecimal.valueOf(1.0)), new Amount(BigDecimal.valueOf(1.0))), new Amount(BigDecimal.valueOf(2.0))),
-                arguments(Arrays.asList(new Amount(BigDecimal.valueOf(1.5)), new Amount(BigDecimal.valueOf(1.2))), new Amount(BigDecimal.valueOf(2.7))),
-                arguments(Arrays.asList(new Amount(BigDecimal.valueOf(1.90)), new Amount(BigDecimal.valueOf(1.80))), new Amount(BigDecimal.valueOf(3.70)))
+                arguments(Collections.singletonList(new BigDecimal("0.0")), new BigDecimal("0.0")),
+                arguments(Arrays.asList(new BigDecimal("1.0"), new BigDecimal("1.0")), new BigDecimal("2.0")),
+                arguments(Arrays.asList(new BigDecimal("1.5"), new BigDecimal("1.2")), new BigDecimal("2.7")),
+                arguments(Arrays.asList(new BigDecimal("1.90"), new BigDecimal("1.80")), new BigDecimal("3.70"))
         );
     }
 
     @ParameterizedTest
     @MethodSource("amountDepositProvider")
-    void receive_a_deposit(List<Amount> depositAmount, Amount newAccountAmount) {
-        Account account = new Account(new Amount(BigDecimal.valueOf(0.0)), new AccountHistory());
-        for (Amount amount : depositAmount) {
+    void receive_a_deposit(List<BigDecimal> depositAmount, BigDecimal newAccountAmount) {
+        Account account = new Account(new BigDecimal("0.0"), new AccountHistory());
+        for (BigDecimal amount : depositAmount) {
             account.makeAn(new Deposit(amount));
         }
         assertThat(account.amount()).isEqualTo(newAccountAmount);
@@ -41,16 +41,16 @@ public class AccountShould {
 
     private static Stream<Arguments> amountWithdrawalProvider() {
         return Stream.of(
-                arguments(new Amount(BigDecimal.valueOf(10.0)), new Amount(BigDecimal.valueOf(1.0)), new Amount(BigDecimal.valueOf(9.0))),
-                arguments(new Amount(BigDecimal.valueOf(10.50)), new Amount(BigDecimal.valueOf(0.25)), new Amount(BigDecimal.valueOf(10.25))),
-                arguments(new Amount(BigDecimal.valueOf(10.50)), new Amount(BigDecimal.valueOf(0.80)), new Amount(BigDecimal.valueOf(9.70))),
-                arguments(new Amount(BigDecimal.valueOf(10.0)), new Amount(BigDecimal.valueOf(10.0)), new Amount(BigDecimal.valueOf(0.0)))
+                arguments(new BigDecimal("10.0"), new BigDecimal("1.0"), new BigDecimal("9.0")),
+                arguments(new BigDecimal("10.50"), new BigDecimal("0.25"), new BigDecimal("10.25")),
+                arguments(new BigDecimal("10.50"), new BigDecimal("0.80"), new BigDecimal("9.70")),
+                arguments(new BigDecimal("10.0"), new BigDecimal("10.0"), new BigDecimal("0.0"))
         );
     }
 
     @ParameterizedTest
     @MethodSource("amountWithdrawalProvider")
-    void allow_a_withdrawal(Amount accountAmount, Amount withdrawalAmount, Amount newAccountAmount) {
+    void allow_a_withdrawal(BigDecimal accountAmount, BigDecimal withdrawalAmount, BigDecimal newAccountAmount) {
         Account account = new Account(accountAmount, new AccountHistory());
         account.makeAn(new Withdrawal(withdrawalAmount));
         assertThat(account.amount()).isEqualTo(newAccountAmount);
@@ -58,14 +58,14 @@ public class AccountShould {
 
     private static Stream<Arguments> notAllowedAmountWithdrawalProvider() {
         return Stream.of(
-                arguments(new Amount(BigDecimal.valueOf(0.0)), new Amount(BigDecimal.valueOf(1.0)), new Amount(BigDecimal.valueOf(0.0))),
-                arguments(new Amount(BigDecimal.valueOf(0.50)), new Amount(BigDecimal.valueOf(1.0)), new Amount(BigDecimal.valueOf(0.50)))
+                arguments(new BigDecimal("0.0"), new BigDecimal("1.0"), new BigDecimal("0.0")),
+                arguments(new BigDecimal("0.50"), new BigDecimal("1.0"), new BigDecimal("0.50"))
         );
     }
 
     @ParameterizedTest
     @MethodSource("notAllowedAmountWithdrawalProvider")
-    void prevent_a_withdrawal_when_there_is_not_enough_savings(Amount accountAmount, Amount withdrawalAmount, Amount newAccountAmount) {
+    void prevent_a_withdrawal_when_there_is_not_enough_savings(BigDecimal accountAmount, BigDecimal withdrawalAmount, BigDecimal newAccountAmount) {
         Account account = new Account(accountAmount, new AccountHistory());
         account.makeAn(new Withdrawal(withdrawalAmount));
         assertThat(account.amount()).isEqualTo(newAccountAmount);
@@ -73,24 +73,24 @@ public class AccountShould {
 
     @Test
     void give_account_history_operations() {
-        Account account = new Account(new Amount(BigDecimal.valueOf(0.0)), new AccountHistory());
-        account.makeAn(new Deposit(new Amount(BigDecimal.valueOf(5.0)), LocalDate.of(2020,4,2)));
-        account.makeAn(new Withdrawal(new Amount(BigDecimal.valueOf(4.0)), LocalDate.of(2020,5,5)));
+        Account account = new Account(new BigDecimal("0.0"), new AccountHistory());
+        account.makeAn(new Deposit(new BigDecimal("5.0"), LocalDate.of(2020,4,2)));
+        account.makeAn(new Withdrawal(new BigDecimal("4.0"), LocalDate.of(2020,5,5)));
         AccountHistory historyExpected = new AccountHistory();
-        historyExpected.add(new Deposit(new Amount(BigDecimal.valueOf(5.0)), LocalDate.of(2020,4,2)), new Amount(BigDecimal.valueOf(5.0)));
-        historyExpected.add(new Withdrawal(new Amount(BigDecimal.valueOf(4.0)), LocalDate.of(2020,5,5)), new Amount(BigDecimal.valueOf(1.0)));
+        historyExpected.add(new Deposit(new BigDecimal("5.0"), LocalDate.of(2020,4,2)), new BigDecimal("5.0"));
+        historyExpected.add(new Withdrawal(new BigDecimal("4.0"), LocalDate.of(2020,5,5)), new BigDecimal("1.0"));
         assertThat(account.history()).isEqualTo(historyExpected);
     }
 
     @Test
     void not_put_prevented_operation_in_history() {
-        Account account = new Account(new Amount(BigDecimal.valueOf(0.0)), new AccountHistory());
-        account.makeAn(new Deposit(new Amount(BigDecimal.valueOf(5.0)), LocalDate.of(2020,4,2)));
-        account.makeAn(new Withdrawal(new Amount(BigDecimal.valueOf(4.0)), LocalDate.of(2020,5,5)));
-        account.makeAn(new Withdrawal(new Amount(BigDecimal.valueOf(4.0)), LocalDate.of(2020,7,5)));
+        Account account = new Account(new BigDecimal("0.0"), new AccountHistory());
+        account.makeAn(new Deposit(new BigDecimal("5.0"), LocalDate.of(2020,4,2)));
+        account.makeAn(new Withdrawal(new BigDecimal("4.0"), LocalDate.of(2020,5,5)));
+        account.makeAn(new Withdrawal(new BigDecimal("4.0"), LocalDate.of(2020,7,5)));
         AccountHistory historyExpected = new AccountHistory();
-        historyExpected.add(new Deposit(new Amount(BigDecimal.valueOf(5.0)), LocalDate.of(2020,4,2)), new Amount(BigDecimal.valueOf(5.0)));
-        historyExpected.add(new Withdrawal(new Amount(BigDecimal.valueOf(4.0)), LocalDate.of(2020,5,5)), new Amount(BigDecimal.valueOf(1.0)));
+        historyExpected.add(new Deposit(new BigDecimal("5.0"), LocalDate.of(2020,4,2)), new BigDecimal("5.0"));
+        historyExpected.add(new Withdrawal(new BigDecimal("4.0"), LocalDate.of(2020,5,5)), new BigDecimal("1.0"));
         assertThat(account.history()).isEqualTo(historyExpected);
     }
 }

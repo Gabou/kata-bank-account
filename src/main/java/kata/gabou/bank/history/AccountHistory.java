@@ -1,8 +1,8 @@
 package kata.gabou.bank.history;
 
-import kata.gabou.bank.Amount;
 import kata.gabou.bank.operations.Operation;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -11,7 +11,7 @@ public class AccountHistory {
 
     private final List<OperationHistory> operations = new ArrayList<>();
 
-    public void add(Operation operation, final Amount balance) {
+    public void add(Operation operation, final BigDecimal balance) {
         operations.add(new OperationHistory(operation, balance));
     }
 

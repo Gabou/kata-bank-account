@@ -3,18 +3,20 @@ package kata.gabou.bank;
 import kata.gabou.bank.history.AccountHistory;
 import kata.gabou.bank.operations.Operation;
 
+import java.math.BigDecimal;
+
 public class Account {
-    private Amount balance;
+    private BigDecimal balance;
     private AccountHistory history;
 
-    public Account(Amount balance, AccountHistory history) {
+    public Account(BigDecimal balance, AccountHistory history) {
         this.balance = balance;
         this.history = history;
     }
 
     public void makeAn(Operation operation) {
         try {
-            Amount newBalance = operation.execute(balance);
+            BigDecimal newBalance = operation.execute(balance);
             history.add(operation, newBalance);
             this.balance = newBalance;
         } catch (NotEnoughSavingsException exception) {
@@ -22,7 +24,7 @@ public class Account {
         }
     }
 
-    public Amount amount() {
+    public BigDecimal amount() {
         return balance;
     }
 

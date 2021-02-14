@@ -1,8 +1,9 @@
 package kata.gabou.bank.operations;
 
-import kata.gabou.bank.Amount;
 import kata.gabou.bank.NotEnoughSavingsException;
 
+import java.math.BigDecimal;
+
 public interface Operation {
-    Amount execute(Amount amount) throws NotEnoughSavingsException;
+    BigDecimal execute(BigDecimal amount) throws NotEnoughSavingsException;
 }

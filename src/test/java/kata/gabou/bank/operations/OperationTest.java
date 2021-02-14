@@ -1,2 +1,4 @@
-package kata.gabou.bank.operations;public class OperationTest {
+package kata.gabou.bank.operations;
+
+public class OperationTest {
 }

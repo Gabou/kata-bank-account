@@ -21,11 +21,13 @@ public class Withdrawal implements Operation {
     }
 
     @Override
-    public BigDecimal execute(BigDecimal amount) throws NotEnoughSavingsException {
-        if(amount.compareTo(BigDecimal.ZERO) != 0 && amount.compareTo(this.amount) >= 0) {
+    public BigDecimal process(BigDecimal amount) throws NotEnoughSavingsException {
             return amount.subtract(this.amount);
-        }
-        throw new NotEnoughSavingsException("Not possible to subtract amount because there is no savings or amount to subtract : (" + this.amount + ") is greater than original amount (" + amount + ")");
+    }
+
+    @Override
+    public boolean canProcessWith(BigDecimal amount) {
+        return amount.compareTo(BigDecimal.ZERO) != 0 && amount.compareTo(this.amount) >= 0;
     }
 
     @Override

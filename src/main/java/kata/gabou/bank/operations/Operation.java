@@ -5,5 +5,7 @@ import kata.gabou.bank.NotEnoughSavingsException;
 import java.math.BigDecimal;
 
 public interface Operation {
-    BigDecimal execute(BigDecimal amount) throws NotEnoughSavingsException;
+    BigDecimal process(BigDecimal amount) throws NotEnoughSavingsException;
+
+    boolean canProcessWith(BigDecimal amount);
 }

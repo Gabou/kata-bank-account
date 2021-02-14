@@ -16,7 +16,12 @@ public class Account {
 
     public void makeAn(Operation operation) {
         try {
-            BigDecimal newBalance = operation.execute(balance);
+
+            if(!operation.canProcessWith(balance)) {
+                throw new NotEnoughSavingsException("Not enough Savings to process operation");
+            }
+
+            BigDecimal newBalance = operation.process(balance);
             history.add(operation, newBalance);
             this.balance = newBalance;
         } catch (NotEnoughSavingsException exception) {

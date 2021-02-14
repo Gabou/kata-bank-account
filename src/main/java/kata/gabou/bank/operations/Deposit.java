@@ -19,8 +19,13 @@ public class Deposit implements Operation {
     }
 
     @Override
-    public BigDecimal execute(BigDecimal amount) {
+    public BigDecimal process(BigDecimal amount) {
             return amount.add(this.amount);
+    }
+
+    @Override
+    public boolean canProcessWith(BigDecimal amount) {
+        return true;
     }
 
     @Override
